@@ -18,7 +18,8 @@ WORKDIR /app
 # This layer only rebuilds if requirements.txt changes.
 # If you change main.py, this layer is still cached → pip skipped.
 # ─────────────────────────────────────────────────────────────
-COPY requirements.txt .
+COPY model-app/requirements.txt .
+
 
 # ─────────────────────────────────────────────────────────────
 # RUN — executes a command during the BUILD phase.
@@ -31,7 +32,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # This layer changes on every code edit — and that's fine,
 # because all the expensive layers above are cached.
 # ─────────────────────────────────────────────────────────────
-COPY . .
+COPY model-app/ .
 
 # ─────────────────────────────────────────────────────────────
 # EXPOSE — documents which port the app listens on.
@@ -48,4 +49,4 @@ EXPOSE 8000
 
 # uvicorn is the WebServer
 # ─────────────────────────────────────────────────────────────
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "my-app:app", "--host", "0.0.0.0", "--port", "8000"]

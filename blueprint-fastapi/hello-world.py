@@ -14,8 +14,8 @@ from fastapi import FastAPI
 # This is the object uvicorn refers to in: uvicorn main:app
 # The title and description show up in /docs
 app = FastAPI(
-    title="My First FastAPI App",
-    description="Learning FastAPI step by step",
+    title="My FastAPI App",
+    description="Blueprint for using FastAPI",
     version="1.0.0",
     # openapi_url=None # To disable the Docs (diables docs, redoc, openapi.json)
 )

@@ -58,3 +58,20 @@ Application code       → changes constantly
 
 Goal:
 - development of a basic Python web application using Docker
+
+
+#### Run Docker 
+
+##### 1. Build the image
+`docker build -t MY_IMAGE_NAME .`
+- `-t MY_IMAGE_NAME`: The optional tag (-t or --tag) which Gives a Human-Readable name. Without this Docker builds the image with Random ID 
+- Optional: Version Tag (e.g., MY_IMAGE_NAME:Version_Tag) to the resulting image can be added. If not specified, Docker defaults to `:latest` automatically.
+- `.`:  Build context tells Docker which directory to use as the root when executing the Dockerfile
+
+`docker build -t hello-fastapi .`
+
+##### 2. Run the container
+`docker run -d -p 8000:8000 --name hello hello-fastapi`
+
+##### 3. Test it
+curl http://localhost:8000
