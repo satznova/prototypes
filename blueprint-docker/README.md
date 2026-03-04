@@ -66,12 +66,26 @@ Goal:
 `docker build -t MY_IMAGE_NAME .`
 - `-t MY_IMAGE_NAME`: The optional tag (-t or --tag) which Gives a Human-Readable name. Without this Docker builds the image with Random ID 
 - Optional: Version Tag (e.g., MY_IMAGE_NAME:Version_Tag) to the resulting image can be added. If not specified, Docker defaults to `:latest` automatically.
-- `.`:  Build context tells Docker which directory to use as the root when executing the Dockerfile
+- `.`:  Build context tells Docker which directory to use as the root when executing the Dockerfile. `Dockerfile` should be available in this path
 
-`docker build -t hello-fastapi .`
+`docker build -t my-model-app .`
+- Image `localhost/my-model-app:latest` will be created
+
+- Images are stored: 
+- `docker.io/library/` : Remote (Public) Registry. Images stored in Remote Docker Hub registry 
+- `localhost` : Local Images/Registry. Images stores in our Local machine's image cache
 
 ##### 2. Run the container
+`docker run -d -p HOST_PORT:CONTAINER_PORT --name CONTAINER_NAME IMAGE_NAME`
+- `docker run`: The command is used to run a container
+- `-d` (detach): Runs the Container in the background
+- `-p` (publish): Maps <Host_Port : Container_Port>
+- `--name`: Assigns Custom name to the container
+
 `docker run -d -p 8000:8000 --name hello hello-fastapi`
+`docker run -d --name python_test python:3.11-slim`
+
+- Note: If the Image is not available in local, then it would be first copied from Public Registry
 
 ##### 3. Test it
 curl http://localhost:8000
