@@ -40,3 +40,4 @@ docker exec -it local-standalone-redis redis-cli
 ```
 
 Gossip Protocol -> Redis shares updates to replica nodes
+
