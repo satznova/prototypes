@@ -1,6 +1,70 @@
 # URL Shortener — System Design Prototype
 
-A production-like URL shortener covering core system design concepts hands-on.
+`Bit.ly` is a URL shortening service that converts long URLs into shorter, manageable links. 
+It also provides analytics for the shortened URLs.
+
+Build a production-like URL shortener covering core system design concepts hands-on.
+
+## Functional Requirements
+
+**Features of the System:** Features that the system should have to satisfy the User.
+
+- Users should pass a long URL and get a shortened URL
+  - Optional: Users can give Alias for the short URL
+  - Optional: Users can specify Expiration date for the Shortened URL
+- Users should able to access the original long URL by using the shortened URL (**Redirection**)
+
+- For Same Long URL multiple short codes can be generated: Because different Users want different expiration date and independant analytics.
+- OR we can Deduplicate can be done for an existing long URL return existing short code - this is a trades off Storage efficiency with above features.
+
+
+## Non-Functional Requirements
+
+**Qualities of the System:** Specifications about a system on how it operates.
+**CAP Theorem:**  Availability >> Consistency | The systems can tolerate some inconsistency 
+
+- Uniqueness of short URL
+- Low Latency Redirection (<100ms)
+
+
+## High-level Design
+
+### Core Entities
+
+
+### API
+- Go one-by-one the Core requirements and define the APIs that are necessary to satisfy them
+
+```
+POST /create_short_code
+GET /{short_code}
+```
+
+- POST:
+  - Long URL, Optional: Alias, Expiration Date
+  - To make an entry of long URL & short URL mapping in the Database
+
+- GET:
+  - GET the Long URL
+  - Redirection with HTTP code 302
+
+
+### Requirement 1: 
+
+
+HTTP
+
+- 404 Not Found: Resource might be temporarily unavailable
+- 410 Gone: The requested resource is Gone for good and won't return
+
+- 301 Permanent Redirect: Resources Permanently moved to target URL
+  - Browsers cache this response. 
+  - Subsequent Short URL requests directly goes to Long URL bypassing our server
+- 302 Found: Resource is temporarily located at different URL
+  - More control over redirect process - we can update Expire Links as needed
+  - It prevents browser caching the redirect
+  - Important: We can track Click Analytics for each short URL
+
 
 ## Architecture
 
