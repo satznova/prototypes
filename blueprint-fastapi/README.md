@@ -51,6 +51,8 @@ Browser / curl / Client
 - **Path Operation Decorator** : 
   - `@app.get("/")`: This decorator tells FastAPI that the function below corresponds to the **path** / with an **operation** get.
 
+# TODO
+- Add POST with Pydantic datamodel
 
 ##### Route Ordering
 
