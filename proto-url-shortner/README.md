@@ -125,6 +125,39 @@ url-shortener/
 └── requirements.txt
 ```
 
+```
+my_app/
+├── docker-compose.yml          ← spins up all 3 services
+│
+├── backend/                    ← FastAPI (owns DB)
+│   ├── main.py                 ← app entry, mounts routers, CORS
+│   ├── database.py             ← SQLAlchemy engine + connection pool
+│   ├── models.py               ← ORM table definitions
+│   ├── schemas.py              ← Pydantic request/response validation
+│   ├── requirements.txt
+│   ├── Dockerfile
+│   └── routers/
+│       └── registrations.py    ← POST, GET, DELETE endpoints
+│
+└── frontend/                   ← Streamlit (owns UI)
+    ├── app.py                  ← UI only — zero SQL
+    ├── api_client.py           ← only file that calls requests
+    ├── requirements.txt
+    ├── Dockerfile
+    └── .streamlit/
+        └── secrets.toml        ← API base URL
+```
+
+app.py          — Streamlit frontend 
+api_client.py   — Streamlit's only connection to the backend
+
+
+```shell
+uvicorn url-shortner:app --reload
+streamlit run app.py
+```
+
+
 ## Getting Started
 
 ```bash
