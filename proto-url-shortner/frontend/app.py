@@ -1,9 +1,19 @@
+"""
+app.py — Streamlit frontend
+-----------------------------
+This file contains ONLY UI code.
+It never touches SQL, psycopg2, or SQLAlchemy.
+All data operations go through api_client.py.
+
+RUN WITH:
+  streamlit run app.py
+"""
+
 import streamlit as st
-import requests
 from datetime import date, timedelta
 
-
-CREATE_SHORT_URL_API = "http://127.0.0.1:8000/create_short_code"
+import requests
+import api_client
 
 st.set_page_config(
     page_title="URL Shortner",
@@ -52,14 +62,22 @@ with (st.form("url_shortner_form")):
     if submitted:
         with st.spinner("Creating Shortened URL..."):
             try:
-                response = requests.post(
-                    url=CREATE_SHORT_URL_API,
-                    json={"long_url": long_url, "alias": alias}, #, "exp_dt": exp_dt.tostring()},
-                    timeout=10
-                )
-                response.raise_for_status() # If request is unsuccessful (4xx client error or 5xx server error), it automatically raises an HTTPError exception
-                st.success(f"API returned {response.status_code}")
-                st.json(response.json()) # Display as pretty-printed, interactive JSON string
-            except requests.exceptions.HTTPError as e:
+                result = api_client.post_long_url({
+                    "long_url": long_url,
+                    "alias": alias,
+                    #, "exp_dt": exp_dt.tostring()
+                })
+                # response = requests.post(
+                #     url=CREATE_SHORT_URL_API,
+                #     json={"long_url": long_url, "alias": alias}, #, "exp_dt": exp_dt.tostring()},
+                #     timeout=10
+                # )
+                st.success(f"API returned {result}")
+                st.json(result) # Display as pretty-printed, interactive JSON string
+            except requests.HTTPError as e:
+                #handle_api_error(e)
                 st.error(f"API returned an error {e}")
-
+            except requests.exceptions.ConnectionError:
+                st.error("Cannot reach the API. Is the backend running?")
+            except requests.exceptions.Timeout:
+                st.error("Request timed out.")
