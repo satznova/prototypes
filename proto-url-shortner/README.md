@@ -153,7 +153,7 @@ api_client.py   — Streamlit's only connection to the backend
 
 
 ```shell
-uvicorn url-shortner:app --reload
+uvicorn routers/url_shortner:app --reload
 streamlit run app.py
 ```
 

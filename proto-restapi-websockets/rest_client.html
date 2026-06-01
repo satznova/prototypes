@@ -1,0 +1,55 @@
+<!-- rest_client.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>REST Notifications</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
+        #stats { background: #fff3cd; padding: 10px; margin-bottom: 10px; border-radius: 6px; }
+        .notif { background: white; padding: 10px; margin: 6px 0;
+                 border-left: 4px solid #007bff; border-radius: 4px; }
+        .order   { border-color: #28a745; }
+        .alert   { border-color: #dc3545; }
+        .message { border-color: #007bff; }
+    </style>
+</head>
+<body>
+<h2>REST Polling Dashboard</h2>
+<div id="stats">Polls: 0 | Empty polls: 0 | Notifications: 0</div>
+<div id="feed"></div>
+
+<script>
+    let lastTimestamp = 0;
+    let totalPolls = 0;
+    let emptyPolls = 0;
+    let totalNotifs = 0;
+
+    async function poll() {
+      totalPolls++;
+      const res = await fetch(`http://localhost:8000/notifications?since=${lastTimestamp}`);
+      const data = await res.json();
+
+      if (data.notifications.length === 0) {
+        emptyPolls++;  // wasted request!
+      } else {
+        data.notifications.forEach(addNotification);
+        totalNotifs += data.notifications.length;
+        lastTimestamp = data.timestamp;
+      }
+
+      document.getElementById('stats').textContent =
+        `Polls: ${totalPolls} | Empty polls: ${emptyPolls} | Notifications: ${totalNotifs}`;
+    }
+
+    function addNotification(n) {
+      const div = document.createElement('div');
+      div.className = `notif ${n.type}`;
+      div.textContent = `[${n.type.toUpperCase()}] ${n.text}`;
+      document.getElementById('feed').prepend(div);
+    }
+
+    // Poll every 2 seconds — even if nothing changed
+    setInterval(poll, 2000);
+</script>
+</body>
+</html>

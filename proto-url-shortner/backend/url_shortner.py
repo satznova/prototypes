@@ -1,3 +1,27 @@
+"""
+routers/url_shortner.py — API route handlers (with Redis)
+------------------------------------------------------------
+Redis is used in three places here:
+
+  POST /create_short_code/  → rate limiting per IP
+                            → cache invalidation after write
+
+  GET  /{short_code}/       → cache-aside pattern:
+                            check Redis first, fall back to Postgres
+
+  GET  /{short_code}/  → cache-aside with short TTL
+
+  DELETE /registrations/ → cache invalidation after delete
+
+CACHE-ASIDE PATTERN (the most common caching strategy):
+  1. Check Redis for the key
+  2. Cache HIT  → return cached value immediately (skip DB)
+  3. Cache MISS → query Postgres, store result in Redis, return result
+
+This means the first request after a cache miss (or expiry) hits Postgres,
+but all subsequent requests within the TTL window are free.
+"""
+
 from fastapi import FastAPI, status
 from fastapi.responses import RedirectResponse
 import validators
